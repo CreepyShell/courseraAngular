@@ -10,7 +10,7 @@ import { Dish } from 'src/models/dish';
 export class MenuComponent implements OnInit {
   selectedDish: Dish | undefined;
   constructor(private _dishService: DishService) {}
-  dishes: Dish[] = this._dishService.getDishes();
+  dishes: Dish[] = this._dishService.getAllDishes();
   onSelect(dish: Dish) {
     this.selectedDish = dish;
   }

@@ -8,7 +8,13 @@ import { DISHES } from 'src/models/dishes';
 export class DishService {
   constructor() {}
 
-  getDishes(): Dish[] {
+  getAllDishes(): Dish[] {
     return DISHES;
+  }
+  getDishById(id: string): Dish | undefined {
+    return DISHES.find((d) => d.id === id);
+  }
+  getFeaturedDish(): Dish {
+    return DISHES.filter((d) => d.featured)[0];
   }
 }
