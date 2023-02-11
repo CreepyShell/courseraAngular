@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { AboutComponent } from '../components/about/about.component';
 import { ContactComponent } from '../components/contact/contact.component';
 import { DishdetailComponent } from '../components/dishdetail/dishdetail.component';
 import { HomeComponent } from '../components/home/home.component';
@@ -20,6 +21,10 @@ export const routes: Routes = [
   {
     path: 'dishdetail/:id',
     component: DishdetailComponent,
+  },
+  {
+    path: 'aboutus',
+    component: AboutComponent,
   },
   {
     path: '',
