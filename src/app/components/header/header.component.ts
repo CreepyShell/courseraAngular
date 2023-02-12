@@ -14,8 +14,8 @@ export class HeaderComponent implements OnInit {
 
   openLoginForm() {
     let d: MatDialogRef<LoginComponent> = this.dialog.open(LoginComponent, {
-      height: '400px',
-      width: '600px',
+      height: '350px',
+      width: '450px',
       position: {}
     });
   }

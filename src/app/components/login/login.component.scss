@@ -1,3 +1,8 @@
-.login{
-    border:1px solid blue;
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.container>* {
+    width: 100%;
 }
