@@ -7,6 +7,11 @@ import { MatListModule } from '@angular/material/list';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import {
+  MatDialog,
+  MatDialogModule,
+  MAT_DIALOG_DEFAULT_OPTIONS,
+} from '@angular/material/dialog';
 
 import { AppRoutingModule } from './app-routing/app-routing.module';
 import { AppComponent } from './app.component';
@@ -23,6 +28,7 @@ import { HomeComponent } from './components/home/home.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { PromotionService } from './services/promotion.service';
 import { LeaderService } from './services/leader.service';
+import { LoginComponent } from './components/login/login.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,6 +39,7 @@ import { LeaderService } from './services/leader.service';
     AboutComponent,
     HomeComponent,
     ContactComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -44,8 +51,15 @@ import { LeaderService } from './services/leader.service';
     MatCardModule,
     MatButtonModule,
     AppRoutingModule,
+    MatDialogModule,
   ],
-  providers: [DishService, PromotionService, LeaderService],
+  entryComponents: [LoginComponent],
+  providers: [
+    DishService,
+    PromotionService,
+    LeaderService,
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true } },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
