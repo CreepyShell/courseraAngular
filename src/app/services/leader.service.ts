@@ -8,13 +8,25 @@ import { LEADERS } from 'src/models/leaders';
 export class LeaderService {
   constructor() {}
 
-  getAllLeaders(): Leader[] {
-    return LEADERS;
+  getAllLeaders(): Promise<Leader[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(LEADERS), 2000);
+    });
   }
-  getLeaderById(id: string): Leader | undefined {
-    return LEADERS.find((l) => l.id === id);
+
+  getLeaderById(id: string): Promise<Leader> {
+    return new Promise((resolve, reject) => {
+      let leader: Leader | undefined = LEADERS.find((l) => l.id === id);
+      if (leader) {
+        setTimeout(() => resolve(leader!), 2000);
+      }
+      setTimeout(() => reject('The leader with given id was not found'), 2000);
+    });
   }
-  getFeaturedLeader(): Leader {
-    return LEADERS.filter((l) => l.featured)[0];
+
+  getFeaturedLeader(): Promise<Leader> {
+    return new Promise((resolve) =>
+      setTimeout(() => resolve(LEADERS.filter((l) => l.featured)[0]), 2000)
+    );
   }
 }

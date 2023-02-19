@@ -7,15 +7,30 @@ import { PROMOTIONS } from 'src/models/promotions';
 })
 export class PromotionService {
   constructor() {}
-  getAllPromotions(): Promotion[] {
-    return PROMOTIONS;
+  getAllPromotions(): Promise<Promotion[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(PROMOTIONS), 2000);
+    });
   }
 
-  getPromotionById(id: string) {
-    return PROMOTIONS.find((p) => p.id === id);
+  getPromotionById(id: string): Promise<Promotion> {
+    return new Promise((resolve, reject) => {
+      let promotion: Promotion | undefined = PROMOTIONS.find(
+        (p) => p.id === id
+      );
+      if (promotion) {
+        setTimeout(() => resolve(promotion!), 2000);
+      }
+      setTimeout(
+        () => reject('The promotion with given id was not found'),
+        2000
+      );
+    });
   }
 
-  getFeaturedPromotion(): Promotion {
-    return PROMOTIONS.filter((p) => p.featured)[0];
+  getFeaturedPromotion(): Promise<Promotion> {
+    return new Promise((resolve) =>
+      setTimeout(() => resolve(PROMOTIONS.filter((p) => p.featured)[0]), 2000)
+    );
   }
 }

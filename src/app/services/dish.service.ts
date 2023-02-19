@@ -8,13 +8,25 @@ import { DISHES } from 'src/models/dishes';
 export class DishService {
   constructor() {}
 
-  getAllDishes(): Dish[] {
-    return DISHES;
+  getAllDishes(): Promise<Dish[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(DISHES), 2000);
+    });
   }
-  getDishById(id: string): Dish | undefined {
-    return DISHES.find((d) => d.id === id);
+
+  getDishById(id: string): Promise<Dish> {
+    return new Promise((resolve, reject) => {
+      let dish: Dish | undefined = DISHES.find((d) => d.id === id);
+      if (dish) {
+        setTimeout(() => resolve(dish!), 2000);
+      }
+      setTimeout(() => reject('The dish with given id was not found'), 2000);
+    });
   }
-  getFeaturedDish(): Dish {
-    return DISHES.filter((d) => d.featured)[0];
+
+  getFeaturedDish(): Promise<Dish> {
+    return new Promise((resolve) =>
+      setTimeout(() => resolve(DISHES.filter((d) => d.featured)[0]), 2000)
+    );
   }
 }

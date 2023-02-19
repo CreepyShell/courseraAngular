@@ -35,21 +35,31 @@
   </div>
   <div fxFlex fxFlexOffset="20px" class="form-size">
     <h2>Send your feedback</h2>
-    <form novalidate [formGroup]="feedbackForm!" (submit)="onSubmit()">
+    <form novalidate [formGroup]="feedbackForm!" #fform="ngForm" (submit)="onSubmit()">
       <p>
         <mat-form-field class="half-width">
           <input matInput formControlName="firstname" placeholder="Enter your firstname" type="text" required
             minlength="3">
+          <mat-error
+            *ngIf="feedbackForm?.get('firstname')?.hasError('required') && feedbackForm?.get('firstname')?.touched">First
+            name is
+            required</mat-error>
         </mat-form-field>
         <mat-form-field class="half-width">
           <input matInput formControlName="lastname" placeholder="Enter your lastname" type="text" required
             minlength="3">
+          <mat-error
+            *ngIf="feedbackForm?.get('lastname')?.hasError('required') && feedbackForm?.get('lastname')?.touched">Last
+            name is required</mat-error>
         </mat-form-field>
       </p>
 
       <p>
         <mat-form-field class="half-width">
           <input matInput formControlName="email" placeholder="Email" type="email">
+          <mat-error
+            *ngIf="feedbackForm?.get('email')?.hasError('required') && feedbackForm?.get('email')?.touched">Email is
+            required</mat-error>
         </mat-form-field>
         <mat-form-field class="half-width">
           <input matInput formControlName="telnum" placeholder="Tel. number" type="tel">
