@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { delay, filter, Observable, of } from 'rxjs';
 import { Dish } from 'src/models/dish';
 import { DISHES } from 'src/models/dishes';
 
@@ -8,25 +9,19 @@ import { DISHES } from 'src/models/dishes';
 export class DishService {
   constructor() {}
 
-  getAllDishes(): Promise<Dish[]> {
-    return new Promise((resolve) => {
-      setTimeout(() => resolve(DISHES), 2000);
-    });
+  getAllDishes(): Observable<Dish[]> {
+    return of(DISHES).pipe(delay(2000));
   }
 
-  getDishById(id: string): Promise<Dish> {
-    return new Promise((resolve, reject) => {
-      let dish: Dish | undefined = DISHES.find((d) => d.id === id);
-      if (dish) {
-        setTimeout(() => resolve(dish!), 2000);
-      }
-      setTimeout(() => reject('The dish with given id was not found'), 2000);
-    });
+  getDishById(id: string): Observable<Dish | undefined> {
+    return of(DISHES.find((d) => d.id === id)).pipe(delay(2000));
   }
 
-  getFeaturedDish(): Promise<Dish> {
-    return new Promise((resolve) =>
-      setTimeout(() => resolve(DISHES.filter((d) => d.featured)[0]), 2000)
-    );
+  getFeaturedDish(): Observable<Dish> {
+    return of(DISHES.filter((d) => d.featured)[0]).pipe(delay(2000));
+  }
+
+  getDishIds(): Observable<string[]> {
+    return of(DISHES.map((d) => d.id));
   }
 }
