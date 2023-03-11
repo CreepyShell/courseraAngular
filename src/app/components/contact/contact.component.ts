@@ -75,8 +75,6 @@ export class ContactComponent implements OnInit {
 
   onSubmit() {
     if (this.feedbackForm?.valid) {
-      this.feedback = this.feedbackForm?.value;
-      console.log(JSON.stringify(this.feedback));
       this.feedbackForm?.reset({
         firstname: [''],
         lastname: [''],
@@ -103,7 +101,6 @@ export class ContactComponent implements OnInit {
       if (this.formErrors.hasOwnProperty(field)) {
         this.formErrors[field] = '';
         let control = form.get(field);
-
         if (control && control.dirty && !control.valid) {
           let message = this.validationMessages[field];
           for(let key in control.errors){
