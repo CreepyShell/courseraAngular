@@ -7,10 +7,14 @@ import { Comment } from 'src/models/comment';
 import { switchMap } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
+import { expand, visibility } from 'src/app/animations/app.animations';
 @Component({
   selector: 'app-dishdetail',
   templateUrl: './dishdetail.component.html',
   styleUrls: ['./dishdetail.component.scss'],
+  animations: [
+    visibility(), expand()
+  ],
 })
 export class DishdetailComponent implements OnInit {
   @Input()
@@ -33,6 +37,7 @@ export class DishdetailComponent implements OnInit {
 
   reviewForm: FormGroup | undefined;
   review: Comment | undefined;
+  visibility: string = 'shown';
 
   formErrors: { [key: string]: string } = {
     authorName: '',
@@ -67,7 +72,10 @@ export class DishdetailComponent implements OnInit {
     });
     this.router.params
       .pipe(
-        switchMap((param: Params) => this.dishService.getDishById(param['id']))
+        switchMap((param: Params) => {
+          this.visibility = 'hidden';
+          return this.dishService.getDishById(param['id']);
+        })
       )
       .subscribe({
         next: (d) => {
@@ -75,6 +83,7 @@ export class DishdetailComponent implements OnInit {
             this.dish = d;
             this.dishCopy = d;
             this.setPrevNextDish(this.dish.id);
+            this.visibility = 'shown';
             return;
           }
           this.dish = {

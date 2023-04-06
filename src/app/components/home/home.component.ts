@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { expand, flyInOut } from 'src/app/animations/app.animations';
 import { DishService } from 'src/app/services/dish.service';
 import { LeaderService } from 'src/app/services/leader.service';
 import { PromotionService } from 'src/app/services/promotion.service';
@@ -11,6 +12,11 @@ import { Promotion } from 'src/models/promotion';
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  host: {
+    '[@flyInOut]': 'true',
+    style: 'display: block;',
+  },
+  animations: [flyInOut(), expand()],
 })
 export class HomeComponent implements OnInit {
   dish: Dish | undefined;
@@ -27,12 +33,10 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.dishService
-      .getFeaturedDish()
-      .subscribe({
-        next: (d) => (this.dish = d),
-        error: (err) => this.homeErrMess = err,
-      });
+    this.dishService.getFeaturedDish().subscribe({
+      next: (d) => (this.dish = d),
+      error: (err) => (this.homeErrMess = err),
+    });
     this.promotionService.getFeaturedPromotion().subscribe({
       next: (p) => (this.promotion = p),
       error: (err) => (this.homeErrMess = <any>err),

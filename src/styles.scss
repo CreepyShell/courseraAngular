@@ -37,3 +37,9 @@ $divider-color: #BDBDBD;
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.highlight{
+    border: 1px solid $background-pale;
+    z-index: 1;
+    scale: 1.05;
+}

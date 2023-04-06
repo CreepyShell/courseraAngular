@@ -1,7 +1,7 @@
 <div class="container" fxLayout="row" fxLayout.sm="column" fxLayout.xs="column"
   fxLayoutAlign.gt-md="space-around center" fxLayoutGap="10px">
 
-  <mat-card *ngIf="dish" fxFlex>
+  <mat-card *ngIf="dish" fxFlex [@expand]>
     <mat-card-header>
       <mat-card-title>
         <h3>{{dish.name | uppercase}}</h3>
@@ -21,7 +21,7 @@
     <h4>{{this.homeErrMess}}</h4>
   </div>
 
-  <mat-card *ngIf="promotion" fxFlex>
+  <mat-card *ngIf="promotion" fxFlex [@expand]>
     <mat-card-header>
       <mat-card-title>
         <h3>{{promotion.name | uppercase}}</h3>
@@ -37,7 +37,7 @@
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card *ngIf="leader" fxFlex>
+  <mat-card *ngIf="leader" fxFlex [@expand]>
     <mat-card-header>
       <mat-card-title>
         <h3>{{leader.name}}</h3>

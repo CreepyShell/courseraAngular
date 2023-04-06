@@ -2,11 +2,17 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FeedBack } from 'src/models/feedback';
 import { ContactType } from 'src/models/contacttype';
+import { expand, flyInOut } from 'src/app/animations/app.animations';
 
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.scss'],
+  host: {
+    '[@flyInOut]': 'true',
+    style: 'display: block;',
+  },
+  animations: [flyInOut(), expand()],
 })
 export class ContactComponent implements OnInit {
   feedbackForm: FormGroup | undefined;
@@ -49,15 +55,19 @@ export class ContactComponent implements OnInit {
     this.feedbackForm = this.builder.group({
       firstname: [
         '',
-        [Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(25)],
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(25),
+        ],
       ],
       lastname: [
         '',
-        [Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(25)],
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(25),
+        ],
       ],
       telnum: [0, [Validators.required, Validators.pattern]],
       email: ['', [Validators.required, Validators.pattern]],
@@ -103,7 +113,7 @@ export class ContactComponent implements OnInit {
         let control = form.get(field);
         if (control && control.dirty && !control.valid) {
           let message = this.validationMessages[field];
-          for(let key in control.errors){
+          for (let key in control.errors) {
             this.formErrors[field] = `${message[key]}  `;
           }
         }
