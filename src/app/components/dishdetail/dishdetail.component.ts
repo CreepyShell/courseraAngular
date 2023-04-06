@@ -6,6 +6,7 @@ import { Dish } from 'src/models/dish';
 import { Comment } from 'src/models/comment';
 import { switchMap } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-dishdetail',
   templateUrl: './dishdetail.component.html',
@@ -14,6 +15,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class DishdetailComponent implements OnInit {
   @Input()
   dish: Dish | undefined;
+  baseUrl = environment.serverURL;
 
   @Input()
   value: number | null = 5;
@@ -26,13 +28,11 @@ export class DishdetailComponent implements OnInit {
   prev: string | undefined;
   next: string | undefined;
   preview: string = '';
+  dishErrMess: string = '';
+  dishCopy: Dish | undefined;
 
   reviewForm: FormGroup | undefined;
   review: Comment | undefined;
-
-  name: string = '';
-  stars: Number = 5;
-  comment: string = '';
 
   formErrors: { [key: string]: string } = {
     authorName: '',
@@ -59,7 +59,12 @@ export class DishdetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dishService.getDishIds().subscribe((ids) => (this.dishIds = ids));
+    this.dishService.getDishIds().subscribe({
+      next: (ids) => (this.dishIds = ids),
+      error: (err) => {
+        this.dishErrMess = err;
+      },
+    });
     this.router.params
       .pipe(
         switchMap((param: Params) => this.dishService.getDishById(param['id']))
@@ -68,6 +73,7 @@ export class DishdetailComponent implements OnInit {
         next: (d) => {
           if (d) {
             this.dish = d;
+            this.dishCopy = d;
             this.setPrevNextDish(this.dish.id);
             return;
           }
@@ -84,6 +90,9 @@ export class DishdetailComponent implements OnInit {
           };
           this.next = '0';
           this.prev = '0';
+        },
+        error: (err) => {
+          this.dishErrMess = err;
         },
       });
   }
@@ -134,11 +143,22 @@ export class DishdetailComponent implements OnInit {
 
   onSubmit() {
     if (this.reviewForm && this.reviewForm.valid) {
-      this.dish?.comments.push({
+      this.dishCopy?.comments.push({
         rating: this.value!,
         comment: this.reviewForm.get('comment')?.value,
         author: this.reviewForm.get('authorName')?.value,
         date: this.currentDate.toDateString(),
+      });
+      this.dishService.putDish(this.dishCopy!).subscribe({
+        next: (d) => {
+          this.dish = d;
+          this.dishCopy = d;
+        },
+        error: (err) => {
+          this.dish = undefined;
+          this.dishCopy = undefined;
+          this.dishErrMess = err;
+        },
       });
       this.reviewForm?.reset({
         authorName: '',
