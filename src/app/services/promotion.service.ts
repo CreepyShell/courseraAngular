@@ -1,22 +1,38 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { delay, Observable, of } from 'rxjs';
+import { catchError, delay, map, Observable, of } from 'rxjs';
 import { Promotion } from 'src/models/promotion';
 import { PROMOTIONS } from 'src/models/promotions';
+import { ProcessHTTPMsg } from './process-httpmsg.service.ts.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PromotionService {
-  constructor() {}
+  constructor(
+    private httpClient: HttpClient,
+    private errorHandler: ProcessHTTPMsg
+  ) {}
+
+  baseUrl: string = environment.serverURL;
+
   getAllPromotions(): Observable<Promotion[]> {
-    return of(PROMOTIONS).pipe(delay(2000));
+    return this.httpClient
+      .get<Promotion[]>(this.baseUrl + 'promotions')
+      .pipe(catchError((err) => this.errorHandler.errorHandler(err)));
   }
 
   getPromotionById(id: string): Observable<Promotion | undefined> {
-    return of(PROMOTIONS.find((p) => p.id === id)).pipe(delay(2000));
+    return this.httpClient
+      .get<Promotion>(`${this.baseUrl}promotions/${id}`)
+      .pipe(catchError((err) => this.errorHandler.errorHandler(err)));
   }
 
-  getFeaturedPromotion(): Observable<Promotion> {
-    return of(PROMOTIONS.filter((p) => p.featured)[0]).pipe(delay(2000));
+  getFeaturedPromotion(): Observable<Promotion | undefined> {
+    return this.httpClient.get<Promotion[]>(this.baseUrl + 'promotions').pipe(
+      map((promotions) => promotions.find((p) => p.featured)),
+      catchError((err) => this.errorHandler.errorHandler(err))
+    );
   }
 }

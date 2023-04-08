@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FeedBack } from 'src/models/feedback';
 import { ContactType } from 'src/models/contacttype';
 import { expand, flyInOut } from 'src/app/animations/app.animations';
+import FeedbackService from 'src/app/services/feedback.service';
 
 @Component({
   selector: 'app-contact',
@@ -15,11 +16,18 @@ import { expand, flyInOut } from 'src/app/animations/app.animations';
   animations: [flyInOut(), expand()],
 })
 export class ContactComponent implements OnInit {
+  
   feedbackForm: FormGroup | undefined;
-  feedback: FeedBack | undefined;
   role = ContactType;
+  currentFeedback: FeedBack | undefined = undefined;
+  feedbackErrMess: string = '';
+  isServerReady: boolean = true;
+
   @ViewChild('fform') feedbackFormDirective: any;
-  constructor(private builder: FormBuilder) {
+  constructor(
+    private builder: FormBuilder,
+    private feedbackService: FeedbackService
+  ) {
     this.createForm();
   }
 
@@ -84,7 +92,23 @@ export class ContactComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.feedbackForm?.valid) {
+    this.isServerReady = false;
+    if (this.feedbackForm && this.feedbackForm?.valid) {
+      console.log(this.feedbackForm.getRawValue());
+      this.feedbackService
+        .submitFeedback(this.feedbackForm.getRawValue())
+        .subscribe({
+          next: (feedback) => {
+            this.currentFeedback = feedback;
+            this.isServerReady = true;
+            setTimeout(() => {
+              this.currentFeedback = undefined;
+            }, 5000);
+          },
+          error: (err) => {
+            this.feedbackErrMess = err;
+          },
+        });
       this.feedbackForm?.reset({
         firstname: [''],
         lastname: [''],
@@ -97,7 +121,8 @@ export class ContactComponent implements OnInit {
     }
     this.feedbackFormDirective.reset();
   }
-  keys(): string[] {
+
+  getKeys(): string[] {
     var keys = Object.keys(this.role);
     return keys.slice(keys.length / 2);
   }

@@ -1,13 +1,11 @@
 import {
   HttpClient,
   HttpHeaders,
-  HttpParamsOptions,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, delay, filter, map, Observable, of } from 'rxjs';
+import { catchError, map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Dish } from 'src/models/dish';
-import { DISHES } from 'src/models/dishes';
 import { ProcessHTTPMsg } from './process-httpmsg.service.ts.service';
 
 @Injectable({
@@ -18,6 +16,7 @@ export class DishService {
     private httpClient: HttpClient,
     private errorHandler: ProcessHTTPMsg
   ) {}
+
   baseUrl: string = environment.serverURL;
 
   getAllDishes(): Observable<Dish[]> {

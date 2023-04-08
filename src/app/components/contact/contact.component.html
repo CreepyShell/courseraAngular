@@ -35,7 +35,8 @@
   </div>
   <div fxFlex fxFlexOffset="20px" class="form-size">
     <h2>Send your feedback</h2>
-    <form novalidate [formGroup]="feedbackForm!" #fform="ngForm" (submit)="onSubmit()">
+    <form novalidate [formGroup]="feedbackForm!" #fform="ngForm" (submit)="onSubmit()"
+      *ngIf="!this.currentFeedback && !this.feedbackErrMess && this.isServerReady" [@expand]>
       <p>
         <mat-form-field class="half-width">
           <input matInput formControlName="firstname" placeholder="Enter your firstname" type="text" required
@@ -55,12 +56,12 @@
           <mat-error *ngIf="formErrors.email">{{formErrors.email}}</mat-error>
         </mat-form-field>
         <mat-form-field class="half-width">
-          <input matInput formControlName="telnum" placeholder="Tel. number" type="tel" pattern="[0-9]">
+          <input matInput formControlName="telnum" placeholder="Tel. number" type="tel" pattern="[0-9]*">
           <mat-error *ngIf="formErrors.telnum">
             {{formErrors.telnum}}
           </mat-error>
         </mat-form-field>
-       
+
       </p>
       <table class="form-size">
         <td>
@@ -70,7 +71,7 @@
         </td>
         <td>
           <mat-select formControlName="contacttype">
-            <mat-option *ngFor="let ctype of keys()" [value]="ctype">
+            <mat-option *ngFor="let ctype of getKeys()" [value]="ctype">
               {{ctype}}
             </mat-option>
           </mat-select>
@@ -81,7 +82,25 @@
           <textarea matInput rows="12" cols="30" placeholder="Your feedback" formControlName="message"></textarea>
         </mat-form-field>
       </p>
-      <button type="submit" mat-button class="background-primary text-floral-white">Submit</button>
+      <button type="submit" [disabled]="!this.feedbackForm || !this.feedbackForm.valid" mat-button
+        class="background-primary text-floral-white">Submit</button>
     </form>
+    <div *ngIf="this.isServerReady && this.currentFeedback" [@expand]>
+      <h1>Your Submission</h1>
+      <p>First Name: {{this.currentFeedback.firstname}}</p>
+      <p>Last Name: {{this.currentFeedback.lastname}}</p>
+      <p>Tel. Number: {{this.currentFeedback.telnum}}</p>
+      <p>Email: {{this.currentFeedback.email}}</p>
+      <p>Contact You?: {{this.currentFeedback.agree ? "Yes" : "No"}}</p>
+      <p>How?: {{this.currentFeedback.contacttype}}</p>
+      <p>Feedback: {{this.currentFeedback.email}}</p>
+    </div>
+    <div *ngIf="!this.isServerReady">
+      <mat-spinner></mat-spinner>
+    </div>
+    <div *ngIf="this.feedbackErrMess">
+      <h1>Error</h1>
+      <h4>{{this.feedbackErrMess}}</h4>
+    </div>
   </div>
 </div>
