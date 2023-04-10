@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, delay, map, Observable, of } from 'rxjs';
+import { catchError, map, Observable } from 'rxjs';
 import { Promotion } from 'src/models/promotion';
-import { PROMOTIONS } from 'src/models/promotions';
 import { ProcessHTTPMsg } from './process-httpmsg.service.ts.service';
 import { environment } from 'src/environments/environment';
 
